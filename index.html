@@ -74,6 +74,204 @@
             <label class="block font-bold text-slate-700 mb-0.5">Full Name *</label>
             <input type="text" id="usr-name" required placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
           </div>
+
+          <!-- Email Input Added Back -->
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Email Address *</label>
+            <input type="email" id="usr-email" required placeholder="e.g. rahul@example.com" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">Phone *</label>
+              <input type="tel" id="usr-phone" pattern="[0-9]{10}" required placeholder="10-digit number" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-0.5">City *</label>
+              <input type="text" id="usr-city" required placeholder="Your City" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Category *</label>
+            <select id="usr-category" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+              <option value="Food & Ration">Food & Ration Relief</option>
+              <option value="Medical Emergency">Emergency Medical Aid</option>
+              <option value="Education Support">Child Schooling Fee</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Description *</label>
+            <textarea id="usr-details" rows="2" required placeholder="Explain your situation..." class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit Request
+          </button>
+        </form>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- DONATE MODAL -->
+  <div id="modal-donate" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-3 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-xs text-slate-900" id="donate-modal-title">Donate</h3>
+        <button onclick="closeDonateModal()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input type="number" id="donate-amt" value="1000" class="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold text-sm text-center">
+      <button onclick="processDonation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow">
+        Confirm & Pay
+      </button>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-4 right-4 bg-navy-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl hidden z-50"></div>
+
+  <!-- DATA SYNC SCRIPT -->
+  <script>
+    let defaultCampaigns = [
+      { id: 'C1', title: 'Child Education & Digital Literacy Drive', category: 'Education', city: 'New Delhi', goal: 500000, raised: 385000, image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80' },
+      { id: 'C2', title: 'Daily Meal Ration for Wagers', category: 'Food Relief', city: 'Mumbai', goal: 800000, raised: 620000, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80' }
+    ];
+
+    let selectedCauseTitle = '';
+
+    function initData() {
+      if (!localStorage.getItem('js_campaigns')) {
+        localStorage.setItem('js_campaigns', JSON.stringify(defaultCampaigns));
+      }
+      if (!localStorage.getItem('js_requests')) {
+        localStorage.setItem('js_requests', JSON.stringify([]));
+      }
+      renderCampaigns();
+    }
+
+    function renderCampaigns() {
+      const campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+      const container = document.getElementById('user-campaigns-container');
+      container.innerHTML = '';
+
+      campaigns.forEach(c => {
+        const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
+        const div = document.createElement('div');
+        div.className = "bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm p-3 space-y-2 flex gap-3";
+        div.innerHTML = `
+          <img src="${c.image}" class="w-20 h-20 rounded-lg object-cover shrink-0">
+          <div class="flex-1 flex flex-col justify-between">
+            <div>
+              <span class="text-[8px] bg-slate-100 font-bold px-1.5 py-0.5 rounded text-slate-600">${c.category} • ${c.city}</span>
+              <h4 class="font-bold text-xs text-slate-900 line-clamp-1 mt-0.5">${c.title}</h4>
+            </div>
+            <div>
+              <div class="flex justify-between text-[10px] font-bold text-emerald-700">
+                <span>₹${c.raised.toLocaleString('en-IN')}</span>
+                <span class="text-slate-400">Goal: ₹${c.goal.toLocaleString('en-IN')}</span>
+              </div>
+              <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
+                <div class="bg-saffron-500 h-full" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleUserSubmit(e) {
+      e.preventDefault();
+      const reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
+      const ticketId = 'JS-' + Math.floor(1000 + Math.random() * 9000);
+
+      reqs.unshift({
+        id: ticketId,
+        name: document.getElementById('usr-name').value,
+        email: document.getElementById('usr-email').value,
+        phone: document.getElementById('usr-phone').value,
+        city: document.getElementById('usr-city').value,
+        category: document.getElementById('usr-category').value,
+        concern: document.getElementById('usr-details').value,
+        status: 'Pending'
+      });
+
+      localStorage.setItem('js_requests', JSON.stringify(reqs));
+      e.target.reset();
+      showToast(`Request #${ticketId} Sent to Admin!`);
+    }
+
+    function openDonateModal(title) {
+      selectedCauseTitle = title;
+      document.getElementById('modal-donate').classList.remove('hidden');
+    }
+    function closeDonateModal() { document.getElementById('modal-donate').classList.add('hidden'); }
+
+    function processDonation() {
+      const amt = parseFloat(document.getElementById('donate-amt').value) || 0;
+      let campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+      if(campaigns.length > 0) {
+        campaigns[0].raised += amt;
+        localStorage.setItem('js_campaigns', JSON.stringify(campaigns));
+        renderCampaigns();
+      }
+      closeDonateModal();
+      showToast(`₹${amt} Donation Successful!`);
+    }
+
+    function showToast(m) {
+      const t = document.getElementById('toast');
+      t.innerText = m;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3000);
+    }
+
+    window.addEventListener('storage', renderCampaigns);
+    window.addEventListener('DOMContentLoaded', initData);
+  </script>
+</body>
+</html>
+      </a>
+    </header>
+
+    <!-- App Main Body Content -->
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+      
+      <!-- Banner -->
+      <div class="bg-gradient-to-r from-navy-800 to-navy-900 text-white p-4 rounded-2xl shadow-lg space-y-2">
+        <span class="bg-saffron-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">Urgent Relief</span>
+        <h2 class="text-sm font-extrabold">Winter Warmth & Meal Drive</h2>
+        <p class="text-xs text-slate-300">Help underprivileged families stay safe and fed this season.</p>
+        <button onclick="openDonateModal('Winter Warmth Relief')" class="bg-saffron-500 hover:bg-saffron-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow mt-1">
+          Donate ₹1,500 Kit
+        </button>
+      </div>
+
+      <!-- Live Active Campaigns -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-bold text-slate-900 flex items-center justify-between">
+          <span><i class="fa-solid fa-fire text-saffron-500 mr-1"></i> Active Relief Causes</span>
+          <span class="text-[10px] text-emerald-600 font-bold">100% Tax Exempt</span>
+        </h3>
+        <div id="user-campaigns-container" class="space-y-3">
+          <!-- Dynamic Content -->
+        </div>
+      </div>
+
+      <!-- Help Form -->
+      <div id="help-form" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 shadow-sm">
+        <div class="border-b border-slate-200 pb-2">
+          <span class="text-[9px] bg-saffron-500 text-white font-extrabold px-2 py-0.5 rounded">DIRECT HELP</span>
+          <h3 class="font-bold text-sm text-slate-900 mt-1">Need Emergency Assistance?</h3>
+          <p class="text-[10px] text-slate-500">Submit form below. Request syncs instantly with Admin Console.</p>
+        </div>
+
+        <form onsubmit="handleUserSubmit(event)" class="space-y-2.5 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-0.5">Full Name *</label>
+            <input type="text" id="usr-name" required placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+          </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="block font-bold text-slate-700 mb-0.5">Phone *</label>
