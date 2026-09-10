@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JanSeva - Admin Control Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { saffron: { 500: '#ff9933', 600: '#ea580c' }, navy: { 800: '#031b33', 900: '#000080' } },
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-900 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ADMIN AUTH LOCK OVERLAY -->
+  <div id="admin-lock-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-14 h-14 bg-saffron-500/10 text-saffron-600 rounded-2xl flex items-center justify-center text-2xl mx-auto font-black">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+      <div>
+        <h2 class="font-extrabold text-lg text-slate-900">Admin Control Console</h2>
+        <p class="text-xs text-slate-500 mt-1">Authorized Field Officer Access Only</p>
+      </div>
+
+      <form onsubmit="unlockAdmin(event)" class="space-y-3">
+        <input type="password" id="admin-pass" required placeholder="Enter Secret Key (1234)" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-center text-sm font-bold tracking-widest focus:ring-2 focus:ring-saffron-500 outline-none">
+        <p id="pass-err" class="text-xs text-red-500 font-bold hidden">Invalid Admin Password!</p>
+        <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-all">
+          Unlock Master Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Desktop Top Navigation Bar -->
+  <header class="bg-slate-950 border-b border-slate-800 text-white px-6 py-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-saffron-500 flex items-center justify-center font-black text-white text-base shadow">JS</div>
+      <div>
+        <h1 class="font-extrabold text-base tracking-tight flex items-center gap-2">
+          JanSeva Operations Dashboard
+          <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold">REALTIME CONNECTED</span>
+        </h1>
+        <p class="text-xs text-slate-400">Desktop Field Management Portal</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 font-bold">
+        <i class="fa-solid fa-mobile-screen"></i> Open App View
+      </a>
+      <button onclick="lockAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow">
+        <i class="fa-solid fa-lock"></i> Lock
+      </button>
+    </div>
+  </header>
+
+  <!-- Desktop Dashboard Main Body -->
+  <main class="flex-1 p-6 space-y-6 max-w-7xl mx-auto w-full">
+
+    <!-- KPI Metric Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-black">₹</div>
+        <div>
+          <span class="text-xs font-bold text-slate-400 block">Total Live Funds Raised</span>
+          <span class="text-xl font-black text-slate-900" id="stat-funds">₹ 0</span>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl font-black"><i class="fa-solid fa-clock"></i></div>
+        <div>
+          <span class="text-xs font-bold text-slate-400 block">Pending User Tickets</span>
+          <span class="text-xl font-black text-amber-600" id="stat-pending">0 Requests</span>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+        <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center text-xl font-black"><i class="fa-solid fa-bullhorn"></i></div>
+        <div>
+          <span class="text-xs font-bold text-slate-400 block">Active Causes</span>
+          <span class="text-xl font-black text-slate-900" id="stat-causes">0 Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Requests Management Table -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-2">
+      <div class="bg-slate-50 px-5 py-3 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-saffron-500"></i> Incoming User Help Requests (Realtime)
+        </h3>
+        <span class="text-xs text-slate-500 font-semibold">Changes sync instantly with users</span>
+      </div>
+
+      <div class="overflow-x-auto p-2">
+        <table class="w-full text-left text-xs text-slate-600">
+          <thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-extrabold border-b border-slate-200">
+            <tr>
+              <th class="p-3">Ticket ID</th>
+              <th class="p-3">Applicant Name</th>
+              <th class="p-3">Category</th>
+              <th class="p-3">Location & Phone</th>
+              <th class="p-3">Concern Summary</th>
+              <th class="p-3">Status Action</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body" class="divide-y divide-slate-100">
+            <!-- Dynamic Data Sync -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const SECRET_PASS = "1234";
+
+    function unlockAdmin(e) {
+      e.preventDefault();
+      if(document.getElementById('admin-pass').value === SECRET_PASS) {
+        document.getElementById('admin-lock-screen').classList.add('hidden');
+        syncAdminData();
+      } else {
+        document.getElementById('pass-err').classList.remove('hidden');
+      }
+    }
+
+    function lockAdmin() {
+      document.getElementById('admin-lock-screen').classList.remove('hidden');
+    }
+
+    function syncAdminData() {
+      const requests = JSON.parse(localStorage.getItem('js_requests')) || [];
+      const campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+
+      // Update KPI
+      const totalRaised = campaigns.reduce((acc, c) => acc + c.raised, 0);
+      const pendingCount = requests.filter(r => r.status === 'Pending').length;
+
+      document.getElementById('stat-funds').innerText = '₹ ' + totalRaised.toLocaleString('en-IN');
+      document.getElementById('stat-pending').innerText = pendingCount + ' Requests';
+      document.getElementById('stat-causes').innerText = campaigns.length + ' Active';
+
+      // Update Table
+      const tbody = document.getElementById('admin-table-body');
+      tbody.innerHTML = '';
+
+      if(requests.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No requests submitted yet. Submit one from the user app!</td></tr>`;
+        return;
+      }
+
+      requests.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-saffron-600">${r.id}</td>
+          <td class="p-3 font-bold text-slate-800">${r.name}</td>
+          <td class="p-3 font-semibold">${r.category}</td>
+          <td class="p-3">${r.city} • ${r.phone}</td>
+          <td class="p-3 max-w-xs truncate">${r.concern}</td>
+          <td class="p-3">
+            <select onchange="updateStatus(${idx}, this.value)" class="bg-slate-100 border border-slate-300 rounded-lg text-xs font-bold p-1">
+              <option value="Pending" ${r.status === 'Pending' ? 'selected':''}>Pending</option>
+              <option value="In Progress" ${r.status === 'In Progress' ? 'selected':''}>In Progress</option>
+              <option value="Resolved" ${r.status === 'Resolved' ? 'selected':''}>Resolved</option>
+            </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStatus(index, newStatus) {
+      let requests = JSON.parse(localStorage.getItem('js_requests')) || [];
+      requests[index].status = newStatus;
+      localStorage.setItem('js_requests', JSON.stringify(requests));
+      syncAdminData();
+    }
+
+    // Tab Sync Trigger
+    window.addEventListener('storage', syncAdminData);
+  </script>
+</body>
+</html>
