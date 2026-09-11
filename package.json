@@ -1,0 +1,21 @@
+{
+  "name": "janseva-welfare-portal",
+  "version": "1.0.0",
+  "description": "Government & NGO Public Relief and Direct Assistance Portal",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo \"Open index.html in browser to run the project\""
+  },
+  "keywords": [
+    "html5",
+    "tailwindcss",
+    "emailjs",
+    "janseva",
+    "welfare-portal"
+  ],
+  "author": "JanSeva Team",
+  "license": "MIT",
+  "dependencies": {
+    "@emailjs/browser": "^3.12.0"
+  }
+}
