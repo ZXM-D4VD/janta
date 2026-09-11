@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JanSeva - User App</title>
+  <title>JanSeva - Public Welfare Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- EmailJS SDK for Direct Email Fetch & Trigger -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
+    (function(){
+      // Replace with your EmailJS Public Key
+      emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+    })();
     tailwind.config = {
       theme: {
         extend: {
@@ -18,127 +24,198 @@
     }
   </script>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex justify-center items-center p-0 sm:p-4">
+<body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- Mobile Screen Container -->
-  <div class="w-full sm:max-w-md bg-white min-h-screen sm:min-h-[840px] sm:rounded-3xl border border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden relative">
-    
-    <!-- Top App Header -->
-    <header class="bg-navy-900 text-white p-4 flex items-center justify-between shrink-0 shadow-md">
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-xl bg-saffron-500 flex items-center justify-center font-black text-sm text-white shadow">JS</div>
+  <!-- HEADER / NAVBAR -->
+  <header class="bg-navy-900 text-white px-4 md:px-8 py-3.5 shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-saffron-500 flex items-center justify-center font-black text-base text-white shadow">JS</div>
         <div>
-          <h1 class="font-extrabold text-sm tracking-tight">JanSeva Mobile App</h1>
-          <p class="text-[10px] text-slate-300">Public Welfare & Direct Relief</p>
+          <h1 class="font-extrabold text-base tracking-tight leading-none">JanSeva Portal</h1>
+          <p class="text-[11px] text-slate-300 mt-0.5">Direct Public Relief & Support</p>
         </div>
       </div>
-      <a href="admin.html" class="bg-slate-800 hover:bg-slate-700 text-saffron-500 text-[10px] font-bold px-2.5 py-1.5 rounded-lg border border-slate-700 flex items-center gap-1">
-        <i class="fa-solid fa-user-shield"></i> Admin Panel
-      </a>
-    </header>
 
-    <!-- App Main Body Content -->
-    <main class="flex-1 overflow-y-auto p-4 space-y-4">
-      
-      <!-- Banner -->
-      <div class="bg-gradient-to-r from-navy-800 to-navy-900 text-white p-4 rounded-2xl shadow-lg space-y-2">
-        <span class="bg-saffron-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">Urgent Relief</span>
-        <h2 class="text-sm font-extrabold">Winter Warmth & Meal Drive</h2>
-        <p class="text-xs text-slate-300">Help underprivileged families stay safe and fed this season.</p>
-        <button onclick="openDonateModal('Winter Warmth Relief')" class="bg-saffron-500 hover:bg-saffron-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow mt-1">
-          Donate ₹1,500 Kit
+      <div class="flex items-center gap-4">
+        <!-- Direct Helpline Widget -->
+        <a href="tel:1800112233" class="hidden sm:flex items-center gap-2 bg-saffron-500/10 border border-saffron-500/30 text-saffron-500 text-xs px-3 py-1.5 rounded-full font-bold hover:bg-saffron-500/20 transition">
+          <i class="fa-solid fa-headset"></i> Helpline: 1800-11-2233
+        </a>
+
+        <!-- Secret Triangle Admin Icon (No Text, Click to Open Admin) -->
+        <button onclick="openAdminModal()" class="text-slate-400 hover:text-saffron-500 p-2 text-sm transition focus:outline-none" title="Admin Portal">
+          <i class="fa-solid fa-triangle-exclamation"></i>
         </button>
       </div>
+    </div>
+  </header>
 
-      <!-- Live Active Campaigns -->
-      <div class="space-y-3">
-        <h3 class="text-xs font-bold text-slate-900 flex items-center justify-between">
-          <span><i class="fa-solid fa-fire text-saffron-500 mr-1"></i> Active Relief Causes</span>
-          <span class="text-[10px] text-emerald-600 font-bold">100% Tax Exempt</span>
-        </h3>
-        <div id="user-campaigns-container" class="space-y-3">
-          <!-- Dynamic Content -->
+  <!-- MAIN CONTAINER (Fully Responsive Layout) -->
+  <main class="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT / MAIN CONTENT AREA (8 Cols on Desktop) -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- Urgent Campaign Banner -->
+      <div class="bg-gradient-to-br from-navy-800 to-navy-900 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden">
+        <div class="relative z-10 space-y-3">
+          <span class="bg-saffron-500 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Urgent Drive</span>
+          <h2 class="text-xl md:text-2xl font-extrabold">Winter Warmth & Meal Relief 2026</h2>
+          <p class="text-xs md:text-sm text-slate-300 max-w-xl">Directly powering local relief for families needing immediate ration, winter clothing, and emergency aid.</p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="openDonateModal()" class="bg-saffron-500 hover:bg-saffron-600 text-white text-xs md:text-sm font-bold px-5 py-2.5 rounded-xl shadow-lg transition">
+              Donate Relief Kit (₹1,500)
+            </button>
+            <a href="tel:1800112233" class="sm:hidden bg-slate-800 text-saffron-500 text-xs font-bold px-4 py-2.5 rounded-xl border border-slate-700 flex items-center gap-2">
+              <i class="fa-solid fa-phone"></i> Helpline
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Help Form -->
-      <div id="help-form" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 shadow-sm">
-        <div class="border-b border-slate-200 pb-2">
-          <span class="text-[9px] bg-saffron-500 text-white font-extrabold px-2 py-0.5 rounded">DIRECT HELP</span>
-          <h3 class="font-bold text-sm text-slate-900 mt-1">Need Emergency Assistance?</h3>
-          <p class="text-[10px] text-slate-500">Submit form below. Request syncs instantly with Admin Console.</p>
+      <!-- Active Campaigns Grid -->
+      <div class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm md:text-base font-extrabold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-fire text-saffron-500"></i> Active Relief Campaigns
+          </h3>
+          <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">100% Verified Transparency</span>
         </div>
 
-        <form onsubmit="handleUserSubmit(event)" class="space-y-2.5 text-xs">
+        <div id="user-campaigns-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Dynamic Content Rendered Here -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT / FORM AREA (5 Cols on Desktop) -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Emergency Request Form Card -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-5 md:p-6 shadow-xl space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <span class="text-[10px] bg-saffron-500 text-white font-extrabold px-2.5 py-0.5 rounded-md">DIRECT ASSISTANCE</span>
+          <h3 class="font-extrabold text-base text-slate-900 mt-1">Submit Help Request</h3>
+          <p class="text-xs text-slate-500">Fill in details. Our team will fetch & email updates directly to you.</p>
+        </div>
+
+        <!-- Validation Error Alert Container -->
+        <div id="form-error-alert" class="hidden bg-red-50 border border-red-200 text-red-600 text-xs p-3 rounded-xl font-medium flex items-center gap-2">
+          <i class="fa-solid fa-circle-exclamation text-base shrink-0"></i>
+          <span id="form-error-msg">Please correct highlighted errors below.</span>
+        </div>
+
+        <form id="public-help-form" onsubmit="handleUserSubmit(event)" class="space-y-3.5 text-xs">
           <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Full Name *</label>
-            <input type="text" id="usr-name" required placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            <label class="block font-bold text-slate-700 mb-1">Full Name *</label>
+            <input type="text" id="usr-name" placeholder="e.g. Rahul Sharma" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition">
           </div>
 
-          <!-- Email Input Added Back -->
           <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Email Address *</label>
-            <input type="email" id="usr-email" required placeholder="e.g. rahul@example.com" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            <label class="block font-bold text-slate-700 mb-1">Email Address *</label>
+            <input type="email" id="usr-email" placeholder="e.g. rahul@example.com" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition">
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block font-bold text-slate-700 mb-0.5">Phone *</label>
-              <input type="tel" id="usr-phone" pattern="[0-9]{10}" required placeholder="10-digit number" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+              <label class="block font-bold text-slate-700 mb-1">Phone Number *</label>
+              <input type="tel" id="usr-phone" placeholder="10-digit number" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition">
             </div>
             <div>
-              <label class="block font-bold text-slate-700 mb-0.5">City *</label>
-              <input type="text" id="usr-city" required placeholder="Your City" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+              <label class="block font-bold text-slate-700 mb-1">City / Location *</label>
+              <input type="text" id="usr-city" placeholder="Your City" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition">
             </div>
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Category *</label>
-            <select id="usr-category" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            <label class="block font-bold text-slate-700 mb-1">Category *</label>
+            <select id="usr-category" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition">
+              <option value="">Select Category</option>
               <option value="Food & Ration">Food & Ration Relief</option>
               <option value="Medical Emergency">Emergency Medical Aid</option>
-              <option value="Education Support">Child Schooling Fee</option>
+              <option value="Education Support">Child Education Support</option>
             </select>
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Description *</label>
-            <textarea id="usr-details" rows="2" required placeholder="Explain your situation..." class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none"></textarea>
+            <label class="block font-bold text-slate-700 mb-1">Concern Details *</label>
+            <textarea id="usr-details" rows="3" placeholder="Explain your concern briefly..." class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none transition"></textarea>
           </div>
 
-          <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit Request
+          <button type="submit" id="btn-submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-extrabold py-3 rounded-xl text-xs shadow-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit Request & Dispatch Email
           </button>
         </form>
       </div>
 
-    </main>
-  </div>
+    </div>
 
-  <!-- DONATE MODAL -->
-  <div id="modal-donate" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-3 shadow-2xl">
-      <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-xs text-slate-900" id="donate-modal-title">Donate</h3>
-        <button onclick="closeDonateModal()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+  </main>
+
+  <!-- THANK YOU MODAL POPUP -->
+  <div id="modal-thankyou" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl relative">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto font-black">
+        <i class="fa-solid fa-check"></i>
       </div>
-      <input type="number" id="donate-amt" value="1000" class="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold text-sm text-center">
-      <button onclick="processDonation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow">
-        Confirm & Pay
+      <div class="space-y-1">
+        <h3 class="font-black text-lg text-slate-900">Thank You! Request Received</h3>
+        <p class="text-xs text-slate-500">Your ticket reference ID: <span id="lbl-ticket-id" class="font-extrabold text-saffron-600">JS-0000</span></p>
+      </div>
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left text-xs space-y-2">
+        <p class="text-slate-700 font-medium">We have registered your concern regarding <strong id="lbl-ticket-cat">Emergency Aid</strong>.</p>
+        <p class="text-slate-600">A verification email with your request details has been dispatched to <strong id="lbl-ticket-email" class="text-slate-900">user@email.com</strong>.</p>
+        <div class="pt-1 text-[11px] text-emerald-700 font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-clock"></i> Expected resolution & review within 24-48 hours.
+        </div>
+      </div>
+      <button onclick="closeThankyouModal()" class="w-full bg-navy-900 hover:bg-navy-800 text-white font-bold py-2.5 rounded-xl text-xs transition">
+        Close Window
       </button>
     </div>
   </div>
 
-  <div id="toast" class="fixed bottom-4 right-4 bg-navy-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl hidden z-50"></div>
+  <!-- SECRET ADMIN LOCK MODAL (PASSWORD: 9090) -->
+  <div id="modal-admin-auth" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl relative">
+      <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="w-12 h-12 bg-saffron-500/10 text-saffron-600 rounded-2xl flex items-center justify-center text-xl mx-auto font-black">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div>
+        <h3 class="font-extrabold text-base text-slate-900">Admin Authentication</h3>
+        <p class="text-xs text-slate-400 mt-0.5">Restricted Console Access</p>
+      </div>
 
-  <!-- DATA SYNC SCRIPT -->
+      <div id="admin-auth-error" class="hidden bg-red-50 border border-red-200 text-red-600 text-xs p-2 rounded-xl font-bold">
+        Incorrect Access Key!
+      </div>
+
+      <form onsubmit="verifyAdminPass(event)" class="space-y-3">
+        <!-- NO PASSWORD HINT GIVEN -->
+        <input type="password" id="admin-pass-input" required placeholder="Enter Access Password" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-center text-sm font-bold tracking-widest focus:ring-2 focus:ring-saffron-500 outline-none">
+        <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition">
+          Unlock Console
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER WITH HELPLINE -->
+  <footer class="bg-navy-900 border-t border-slate-800 text-slate-400 text-xs py-4 px-4 text-center space-y-1">
+    <p class="font-medium">JanSeva Welfare Foundation © 2026. All rights reserved.</p>
+    <p class="text-[11px] text-slate-500">24/7 National Emergency Toll-Free Helpline: <span class="text-saffron-500 font-bold">1800-11-2233</span></p>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
   <script>
     let defaultCampaigns = [
       { id: 'C1', title: 'Child Education & Digital Literacy Drive', category: 'Education', city: 'New Delhi', goal: 500000, raised: 385000, image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80' },
       { id: 'C2', title: 'Daily Meal Ration for Wagers', category: 'Food Relief', city: 'Mumbai', goal: 800000, raised: 620000, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80' }
     ];
-
-    let selectedCauseTitle = '';
 
     function initData() {
       if (!localStorage.getItem('js_campaigns')) {
@@ -158,13 +235,13 @@
       campaigns.forEach(c => {
         const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
         const div = document.createElement('div');
-        div.className = "bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm p-3 space-y-2 flex gap-3";
+        div.className = "bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm p-3.5 space-y-2 flex gap-3";
         div.innerHTML = `
-          <img src="${c.image}" class="w-20 h-20 rounded-lg object-cover shrink-0">
+          <img src="${c.image}" class="w-20 h-20 rounded-xl object-cover shrink-0">
           <div class="flex-1 flex flex-col justify-between">
             <div>
-              <span class="text-[8px] bg-slate-100 font-bold px-1.5 py-0.5 rounded text-slate-600">${c.category} • ${c.city}</span>
-              <h4 class="font-bold text-xs text-slate-900 line-clamp-1 mt-0.5">${c.title}</h4>
+              <span class="text-[9px] bg-slate-100 font-bold px-2 py-0.5 rounded text-slate-600">${c.category} • ${c.city}</span>
+              <h4 class="font-bold text-xs text-slate-900 line-clamp-1 mt-1">${c.title}</h4>
             </div>
             <div>
               <div class="flex justify-between text-[10px] font-bold text-emerald-700">
@@ -181,241 +258,101 @@
       });
     }
 
+    // FORM VALIDATION & EMAILJS DISPATCH
     function handleUserSubmit(e) {
       e.preventDefault();
-      const reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
-      const ticketId = 'JS-' + Math.floor(1000 + Math.random() * 9000);
-
-      reqs.unshift({
-        id: ticketId,
-        name: document.getElementById('usr-name').value,
-        email: document.getElementById('usr-email').value,
-        phone: document.getElementById('usr-phone').value,
-        city: document.getElementById('usr-city').value,
-        category: document.getElementById('usr-category').value,
-        concern: document.getElementById('usr-details').value,
-        status: 'Pending'
-      });
-
-      localStorage.setItem('js_requests', JSON.stringify(reqs));
-      e.target.reset();
-      showToast(`Request #${ticketId} Sent to Admin!`);
-    }
-
-    function openDonateModal(title) {
-      selectedCauseTitle = title;
-      document.getElementById('modal-donate').classList.remove('hidden');
-    }
-    function closeDonateModal() { document.getElementById('modal-donate').classList.add('hidden'); }
-
-    function processDonation() {
-      const amt = parseFloat(document.getElementById('donate-amt').value) || 0;
-      let campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
-      if(campaigns.length > 0) {
-        campaigns[0].raised += amt;
-        localStorage.setItem('js_campaigns', JSON.stringify(campaigns));
-        renderCampaigns();
-      }
-      closeDonateModal();
-      showToast(`₹${amt} Donation Successful!`);
-    }
-
-    function showToast(m) {
-      const t = document.getElementById('toast');
-      t.innerText = m;
-      t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 3000);
-    }
-
-    window.addEventListener('storage', renderCampaigns);
-    window.addEventListener('DOMContentLoaded', initData);
-  </script>
-</body>
-</html>
-      </a>
-    </header>
-
-    <!-- App Main Body Content -->
-    <main class="flex-1 overflow-y-auto p-4 space-y-4">
       
-      <!-- Banner -->
-      <div class="bg-gradient-to-r from-navy-800 to-navy-900 text-white p-4 rounded-2xl shadow-lg space-y-2">
-        <span class="bg-saffron-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">Urgent Relief</span>
-        <h2 class="text-sm font-extrabold">Winter Warmth & Meal Drive</h2>
-        <p class="text-xs text-slate-300">Help underprivileged families stay safe and fed this season.</p>
-        <button onclick="openDonateModal('Winter Warmth Relief')" class="bg-saffron-500 hover:bg-saffron-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow mt-1">
-          Donate ₹1,500 Kit
-        </button>
-      </div>
+      const name = document.getElementById('usr-name');
+      const email = document.getElementById('usr-email');
+      const phone = document.getElementById('usr-phone');
+      const city = document.getElementById('usr-city');
+      const category = document.getElementById('usr-category');
+      const details = document.getElementById('usr-details');
+      const errorAlert = document.getElementById('form-error-alert');
+      const errorMsg = document.getElementById('form-error-msg');
 
-      <!-- Live Active Campaigns -->
-      <div class="space-y-3">
-        <h3 class="text-xs font-bold text-slate-900 flex items-center justify-between">
-          <span><i class="fa-solid fa-fire text-saffron-500 mr-1"></i> Active Relief Causes</span>
-          <span class="text-[10px] text-emerald-600 font-bold">100% Tax Exempt</span>
-        </h3>
-        <div id="user-campaigns-container" class="space-y-3">
-          <!-- Dynamic Content -->
-        </div>
-      </div>
+      // Reset Input Highlights
+      [name, email, phone, city, category, details].forEach(i => i.classList.remove('border-red-500', 'bg-red-50'));
 
-      <!-- Help Form -->
-      <div id="help-form" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 shadow-sm">
-        <div class="border-b border-slate-200 pb-2">
-          <span class="text-[9px] bg-saffron-500 text-white font-extrabold px-2 py-0.5 rounded">DIRECT HELP</span>
-          <h3 class="font-bold text-sm text-slate-900 mt-1">Need Emergency Assistance?</h3>
-          <p class="text-[10px] text-slate-500">Submit form below. Request syncs instantly with Admin Console.</p>
-        </div>
+      // Incorrect Entry Field Checks
+      if (!name.value.trim()) return highlightError(name, "Please enter your full name.");
+      if (!email.value.trim() || !email.value.includes('@')) return highlightError(email, "Please enter a valid email address.");
+      if (!phone.value.trim() || phone.value.length < 10) return highlightError(phone, "Please enter a valid 10-digit mobile number.");
+      if (!city.value.trim()) return highlightError(city, "City location is required.");
+      if (!category.value) return highlightError(category, "Please select a help category.");
+      if (!details.value.trim()) return highlightError(details, "Please describe your concern.");
 
-        <form onsubmit="handleUserSubmit(event)" class="space-y-2.5 text-xs">
-          <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Full Name *</label>
-            <input type="text" id="usr-name" required placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block font-bold text-slate-700 mb-0.5">Phone *</label>
-              <input type="tel" id="usr-phone" pattern="[0-9]{10}" required placeholder="10-digit number" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-            </div>
-            <div>
-              <label class="block font-bold text-slate-700 mb-0.5">City *</label>
-              <input type="text" id="usr-city" required placeholder="Your City" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-            </div>
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Category *</label>
-            <select id="usr-category" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-              <option value="Food & Ration">Food & Ration Relief</option>
-              <option value="Medical Emergency">Emergency Medical Aid</option>
-              <option value="Education Support">Child Schooling Fee</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-0.5">Description *</label>
-            <textarea id="usr-details" rows="2" required placeholder="Explain your situation..." class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none"></textarea>
-          </div>
-          <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow flex items-center justify-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit Request
-          </button>
-        </form>
-      </div>
+      errorAlert.classList.add('hidden');
 
-    </main>
-  </div>
-
-  <!-- DONATE MODAL -->
-  <div id="modal-donate" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-xs w-full p-4 space-y-3 shadow-2xl">
-      <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-xs text-slate-900" id="donate-modal-title">Donate</h3>
-        <button onclick="closeDonateModal()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <input type="number" id="donate-amt" value="1000" class="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold text-sm text-center">
-      <button onclick="processDonation()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow">
-        Confirm & Pay
-      </button>
-    </div>
-  </div>
-
-  <div id="toast" class="fixed bottom-4 right-4 bg-navy-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-2xl hidden z-50"></div>
-
-  <!-- DATA SYNC SCRIPT -->
-  <script>
-    let defaultCampaigns = [
-      { id: 'C1', title: 'Child Education & Digital Literacy Drive', category: 'Education', city: 'New Delhi', goal: 500000, raised: 385000, image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80' },
-      { id: 'C2', title: 'Daily Meal Ration for Wagers', category: 'Food Relief', city: 'Mumbai', goal: 800000, raised: 620000, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80' }
-    ];
-
-    let selectedCauseTitle = '';
-
-    function initData() {
-      if (!localStorage.getItem('js_campaigns')) {
-        localStorage.setItem('js_campaigns', JSON.stringify(defaultCampaigns));
-      }
-      if (!localStorage.getItem('js_requests')) {
-        localStorage.setItem('js_requests', JSON.stringify([]));
-      }
-      renderCampaigns();
-    }
-
-    function renderCampaigns() {
-      const campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
-      const container = document.getElementById('user-campaigns-container');
-      container.innerHTML = '';
-
-      campaigns.forEach(c => {
-        const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
-        const div = document.createElement('div');
-        div.className = "bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm p-3 space-y-2 flex gap-3";
-        div.innerHTML = `
-          <img src="${c.image}" class="w-20 h-20 rounded-lg object-cover shrink-0">
-          <div class="flex-1 flex flex-col justify-between">
-            <div>
-              <span class="text-[8px] bg-slate-100 font-bold px-1.5 py-0.5 rounded text-slate-600">${c.category} • ${c.city}</span>
-              <h4 class="font-bold text-xs text-slate-900 line-clamp-1 mt-0.5">${c.title}</h4>
-            </div>
-            <div>
-              <div class="flex justify-between text-[10px] font-bold text-emerald-700">
-                <span>₹${c.raised.toLocaleString('en-IN')}</span>
-                <span class="text-slate-400">Goal: ₹${c.goal.toLocaleString('en-IN')}</span>
-              </div>
-              <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-1">
-                <div class="bg-saffron-500 h-full" style="width: ${pct}%"></div>
-              </div>
-            </div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function handleUserSubmit(e) {
-      e.preventDefault();
-      const reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
       const ticketId = 'JS-' + Math.floor(1000 + Math.random() * 9000);
-
-      reqs.unshift({
+      const requestData = {
         id: ticketId,
-        name: document.getElementById('usr-name').value,
-        phone: document.getElementById('usr-phone').value,
-        city: document.getElementById('usr-city').value,
-        category: document.getElementById('usr-category').value,
-        concern: document.getElementById('usr-details').value,
+        name: name.value.trim(),
+        email: email.value.trim(),
+        phone: phone.value.trim(),
+        city: city.value.trim(),
+        category: category.value,
+        concern: details.value.trim(),
         status: 'Pending'
-      });
+      };
 
+      // Store Local
+      const reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
+      reqs.unshift(requestData);
       localStorage.setItem('js_requests', JSON.stringify(reqs));
-      e.target.reset();
-      showToast(`Request #${ticketId} Sent to Admin!`);
-    }
 
-    function openDonateModal(title) {
-      selectedCauseTitle = title;
-      document.getElementById('modal-donate').classList.remove('hidden');
-    }
-    function closeDonateModal() { document.getElementById('modal-donate').classList.add('hidden'); }
-
-    function processDonation() {
-      const amt = parseFloat(document.getElementById('donate-amt').value) || 0;
-      let campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
-      if(campaigns.length > 0) {
-        campaigns[0].raised += amt;
-        localStorage.setItem('js_campaigns', JSON.stringify(campaigns));
-        renderCampaigns();
+      // Attempt EmailJS Direct Notification Dispatch
+      try {
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          to_name: requestData.name,
+          to_email: requestData.email,
+          ticket_id: requestData.id,
+          category: requestData.category,
+          concern_details: requestData.concern
+        });
+      } catch(err) {
+        console.log("EmailJS Dispatch log:", err);
       }
-      closeDonateModal();
-      showToast(`₹${amt} Donation Successful!`);
+
+      // Show Thank You Modal according to your specs
+      document.getElementById('lbl-ticket-id').innerText = ticketId;
+      document.getElementById('lbl-ticket-cat').innerText = requestData.category;
+      document.getElementById('lbl-ticket-email').innerText = requestData.email;
+      document.getElementById('modal-thankyou').classList.remove('hidden');
+
+      document.getElementById('public-help-form').reset();
     }
 
-    function showToast(m) {
-      const t = document.getElementById('toast');
-      t.innerText = m;
-      t.classList.remove('hidden');
-      setTimeout(() => t.classList.add('hidden'), 3000);
+    function highlightError(field, message) {
+      field.classList.add('border-red-500', 'bg-red-50');
+      field.focus();
+      const errorAlert = document.getElementById('form-error-alert');
+      const errorMsg = document.getElementById('form-error-msg');
+      errorMsg.innerText = message;
+      errorAlert.classList.remove('hidden');
     }
 
-    // Auto-Sync across browser tabs
-    window.addEventListener('storage', renderCampaigns);
+    function openDonateModal() { alert("Donation Portal Redirecting..."); }
+    function closeThankyouModal() { document.getElementById('modal-thankyou').classList.add('hidden'); }
+
+    // SECRET TRIANGLE ADMIN LOGIC
+    function openAdminModal() {
+      document.getElementById('admin-pass-input').value = '';
+      document.getElementById('admin-auth-error').classList.add('hidden');
+      document.getElementById('modal-admin-auth').classList.remove('hidden');
+    }
+    function closeAdminModal() { document.getElementById('modal-admin-auth').classList.add('hidden'); }
+
+    function verifyAdminPass(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass-input').value;
+      if (pass === '9090') {
+        window.location.href = 'admin.html';
+      } else {
+        document.getElementById('admin-auth-error').classList.remove('hidden');
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', initData);
   </script>
 </body>
