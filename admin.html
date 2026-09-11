@@ -21,223 +21,227 @@
 <body class="bg-slate-100 font-sans text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
   <!-- TOP HEADER -->
-  <header class="bg-navy-900 text-white px-4 md:px-8 py-3.5 shadow-md sticky top-0 z-40">
+  <header class="bg-navy-900 text-white px-4 md:px-8 py-3.5 shadow-md border-b border-slate-800">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-2xl bg-saffron-500 flex items-center justify-center font-black text-lg text-white shadow-lg">JS</div>
         <div>
           <h1 class="font-extrabold text-base tracking-tight leading-none">JanSeva Admin Panel</h1>
-          <p class="text-[11px] text-slate-300 mt-0.5">Control Center & Request Dispatcher</p>
+          <p class="text-[11px] text-slate-300 mt-0.5">Management & Monitoring Console</p>
         </div>
       </div>
-      <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3.5 py-2 rounded-xl font-bold border border-slate-700 transition flex items-center gap-1.5">
-        <i class="fa-solid fa-arrow-left"></i> Back to Main Portal
+
+      <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3.5 py-2 rounded-xl font-bold border border-slate-700 transition flex items-center gap-2">
+        <i class="fa-solid fa-globe"></i> View Public Website
       </a>
     </div>
   </header>
 
-  <!-- MAIN DASHBOARD -->
+  <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 flex-1 space-y-6">
 
-    <!-- METRICS CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+    <!-- STATS OVERVIEW -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Requests</p>
-          <h3 id="metric-total-reqs" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+          <h3 id="stat-req-count" class="text-2xl font-black text-slate-900 mt-1">0</h3>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-saffron-500/10 text-saffron-600 flex items-center justify-center text-xl font-black">
-          <i class="fa-solid fa-inbox"></i>
-        </div>
+        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-inbox"></i></div>
       </div>
 
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Pending Action</p>
-          <h3 id="metric-pending-reqs" class="text-2xl font-black text-amber-600 mt-1">0</h3>
-        </div>
-        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-xl font-black">
-          <i class="fa-solid fa-clock"></i>
-        </div>
-      </div>
-
-      <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Campaigns</p>
-          <h3 id="metric-campaigns" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
+          <h3 id="stat-camp-count" class="text-2xl font-black text-slate-900 mt-1">0</h3>
         </div>
-        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xl font-black">
-          <i class="fa-solid fa-hand-holding-heart"></i>
+        <div class="w-10 h-10 bg-saffron-50 text-saffron-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-hand-holding-heart"></i></div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Registered Users</p>
+          <h3 id="stat-usr-count" class="text-2xl font-black text-slate-900 mt-1">0</h3>
         </div>
+        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-users"></i></div>
       </div>
     </div>
 
-    <!-- REQUESTS MANAGEMENT TABLE -->
-    <div class="bg-white border border-slate-200 rounded-3xl shadow-xl overflow-hidden space-y-4 p-5 md:p-6">
-      <div class="flex flex-wrap justify-between items-center gap-3 border-b border-slate-100 pb-4">
-        <div>
-          <h3 class="font-extrabold text-base text-slate-900">Submitted Help Requests</h3>
-          <p class="text-xs text-slate-500">Manage user issues submitted via EmailJS portal</p>
+    <!-- MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT: SUBMITTED REQUESTS TABLE -->
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-3xl p-5 shadow-lg space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-saffron-500"></i> Citizen Emergency Requests
+            </h3>
+            <p class="text-xs text-slate-500">Manage incoming requests and update status.</p>
+          </div>
+          <button onclick="clearAllRequests()" class="text-red-500 hover:text-red-700 text-xs font-bold transition">Clear All</button>
         </div>
-        <button onclick="clearAllRequests()" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-3.5 py-2 rounded-xl font-bold transition">
-          <i class="fa-solid fa-trash-can"></i> Clear All Data
-        </button>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                <th class="p-2.5">ID</th>
+                <th class="p-2.5">Citizen</th>
+                <th class="p-2.5">Category</th>
+                <th class="p-2.5">Status</th>
+                <th class="p-2.5 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-req-tbody" class="divide-y divide-slate-100">
+              <!-- Rendered JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="bg-slate-50 text-slate-500 uppercase font-extrabold border-b border-slate-200">
-              <th class="p-3">Ticket ID</th>
-              <th class="p-3">User Details</th>
-              <th class="p-3">Category & Location</th>
-              <th class="p-3">Concern Details</th>
-              <th class="p-3">Status</th>
-              <th class="p-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody id="admin-req-tbody" class="divide-y divide-slate-100">
-            <!-- Dynamic Content -->
-          </tbody>
-        </table>
+      <!-- RIGHT: ADD NEW CAMPAIGN FORM -->
+      <div class="lg:col-span-4 bg-white border border-slate-200 rounded-3xl p-5 shadow-lg space-y-4">
+        <div class="border-b border-slate-100 pb-3">
+          <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-square-plus text-saffron-500"></i> Add New Relief Cause
+          </h3>
+          <p class="text-xs text-slate-500">Publish campaign on the main portal.</p>
+        </div>
+
+        <form onsubmit="handleAddCampaign(event)" class="space-y-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Cause Title *</label>
+            <input type="text" id="camp-title" required placeholder="e.g. Winter Clothes Drive" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Category *</label>
+              <input type="text" id="camp-cat" required placeholder="e.g. Health" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">City *</label>
+              <input type="text" id="camp-city" required placeholder="e.g. Dehradun" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Goal Amount (₹) *</label>
+              <input type="number" id="camp-goal" required placeholder="500000" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Raised (₹) *</label>
+              <input type="number" id="camp-raised" required placeholder="120000" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Image URL *</label>
+            <input type="url" id="camp-img" required placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
+          </div>
+
+          <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-extrabold py-2.5 rounded-xl shadow-md transition">
+            Publish Campaign
+          </button>
+        </form>
       </div>
-    </div>
 
-    <!-- NEW CAMPAIGN ADDITION FORM -->
-    <div class="bg-white border border-slate-200 rounded-3xl p-5 md:p-6 shadow-xl space-y-4 max-w-2xl">
-      <div class="border-b border-slate-100 pb-3">
-        <h3 class="font-extrabold text-base text-slate-900">Add New Active Cause / Campaign</h3>
-        <p class="text-xs text-slate-500">Publish new relief causes directly to main page</p>
-      </div>
-
-      <form onsubmit="handleNewCampaign(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Campaign Title *</label>
-          <input type="text" id="cmp-title" required placeholder="e.g. Free Winter Clothes Drive" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Category *</label>
-            <input type="text" id="cmp-cat" required placeholder="e.g. Relief Work" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">City *</label>
-            <input type="text" id="cmp-city" required placeholder="e.g. Dehradun" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Target Goal (₹) *</label>
-            <input type="number" id="cmp-goal" required placeholder="300000" class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-          </div>
-          <div>
-            <label class="block font-bold text-slate-700 mb-1">Image URL</label>
-            <input type="url" id="cmp-img" placeholder="https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-saffron-500 outline-none">
-          </div>
-        </div>
-
-        <button type="submit" class="bg-navy-900 hover:bg-navy-800 text-white font-extrabold py-2.5 px-5 rounded-xl transition">
-          Publish Campaign
-        </button>
-      </form>
     </div>
 
   </main>
 
-  <footer class="bg-navy-900 border-t border-slate-800 text-slate-400 text-xs py-4 px-4 text-center">
-    <p class="font-medium">JanSeva Administration Console © 2026</p>
+  <footer class="bg-navy-900 text-slate-400 text-xs py-3 px-4 text-center border-t border-slate-800">
+    JanSeva Portal Admin Console © 2026.
   </footer>
 
+  <!-- CORE ADMIN SCRIPT -->
   <script>
     function loadAdminData() {
-      const requests = JSON.parse(localStorage.getItem('js_requests')) || [];
-      const campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+      const reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
+      const camps = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+      const users = JSON.parse(localStorage.getItem('js_users')) || [];
 
-      document.getElementById('metric-total-reqs').innerText = requests.length;
-      document.getElementById('metric-pending-reqs').innerText = requests.filter(r => r.status === 'Pending').length;
-      document.getElementById('metric-campaigns').innerText = campaigns.length;
+      document.getElementById('stat-req-count').innerText = reqs.length;
+      document.getElementById('stat-camp-count').innerText = camps.length;
+      document.getElementById('stat-usr-count').innerText = users.length;
 
       const tbody = document.getElementById('admin-req-tbody');
       tbody.innerHTML = '';
 
-      if (requests.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-slate-400 font-bold">No emergency requests received yet.</td></tr>`;
+      if(reqs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">No emergency requests submitted yet.</td></tr>`;
         return;
       }
 
-      requests.forEach((req, index) => {
+      reqs.forEach((r, idx) => {
+        const isResolved = r.status === 'Resolved';
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 transition";
         tr.innerHTML = `
-          <td class="p-3 font-extrabold text-saffron-600">${req.id}</td>
-          <td class="p-3">
-            <strong class="block text-slate-900">${req.name}</strong>
-            <span class="text-slate-500">${req.email} | ${req.phone}</span>
+          <td class="p-2.5 font-bold text-saffron-600">${r.id}</td>
+          <td class="p-2.5">
+            <div class="font-bold text-slate-800">${r.name}</div>
+            <div class="text-[10px] text-slate-400">${r.phone} • ${r.city}</div>
           </td>
-          <td class="p-3">
-            <span class="bg-slate-100 px-2 py-0.5 rounded font-bold text-slate-700">${req.category}</span>
-            <div class="text-slate-500 mt-0.5">${req.city}</div>
+          <td class="p-2.5 font-medium">${r.category}</td>
+          <td class="p-2.5">
+            <span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${isResolved ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${r.status}</span>
           </td>
-          <td class="p-3 text-slate-600 max-w-xs truncate" title="${req.concern}">${req.concern}</td>
-          <td class="p-3">
-            <select onchange="updateStatus(${index}, this.value)" class="px-2 py-1 border rounded-lg font-bold ${getStatusColor(req.status)}">
-              <option value="Pending" ${req.status === 'Pending' ? 'selected' : ''}>Pending</option>
-              <option value="In Progress" ${req.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-              <option value="Resolved" ${req.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
-            </select>
-          </td>
-          <td class="p-3 text-right">
-            <button onclick="deleteRequest(${index})" class="text-red-500 hover:text-red-700 font-bold p-1"><i class="fa-solid fa-trash"></i></button>
+          <td class="p-2.5 text-right space-x-1">
+            <button onclick="toggleReqStatus('${r.id}')" class="bg-navy-900 hover:bg-navy-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition">
+              ${isResolved ? 'Mark Pending' : 'Mark Resolved'}
+            </button>
+            <button onclick="deleteReq('${r.id}')" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    function getStatusColor(status) {
-      if (status === 'Resolved') return 'bg-emerald-50 text-emerald-600 border-emerald-300';
-      if (status === 'In Progress') return 'bg-blue-50 text-blue-600 border-blue-300';
-      return 'bg-amber-50 text-amber-600 border-amber-300';
-    }
-
-    function updateStatus(index, newStatus) {
-      const requests = JSON.parse(localStorage.getItem('js_requests')) || [];
-      requests[index].status = newStatus;
-      localStorage.setItem('js_requests', JSON.stringify(requests));
+    function toggleReqStatus(id) {
+      let reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
+      reqs = reqs.map(r => {
+        if(r.id === id) r.status = (r.status === 'Resolved' ? 'Pending' : 'Resolved');
+        return r;
+      });
+      localStorage.setItem('js_requests', JSON.stringify(reqs));
       loadAdminData();
     }
 
-    function deleteRequest(index) {
-      if (confirm('Delete this user request?')) {
-        const requests = JSON.parse(localStorage.getItem('js_requests')) || [];
-        requests.splice(index, 1);
-        localStorage.setItem('js_requests', JSON.stringify(requests));
-        loadAdminData();
-      }
+    function deleteReq(id) {
+      let reqs = JSON.parse(localStorage.getItem('js_requests')) || [];
+      reqs = reqs.filter(r => r.id !== id);
+      localStorage.setItem('js_requests', JSON.stringify(reqs));
+      loadAdminData();
     }
 
     function clearAllRequests() {
-      if (confirm('Are you sure you want to delete ALL requests?')) {
+      if(confirm("Are you sure you want to delete all requests?")) {
         localStorage.setItem('js_requests', JSON.stringify([]));
         loadAdminData();
       }
     }
 
-    function handleNewCampaign(e) {
+    function handleAddCampaign(e) {
       e.preventDefault();
-      const title = document.getElementById('cmp-title').value.trim();
-      const category = document.getElementById('cmp-cat').value.trim();
-      const city = document.getElementById('cmp-city').value.trim();
-      const goal = Number(document.getElementById('cmp-goal').value);
-      const image = document.getElementById('cmp-img').value.trim() || 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=600&q=80';
+      const title = document.getElementById('camp-title').value.trim();
+      const category = document.getElementById('camp-cat').value.trim();
+      const city = document.getElementById('camp-city').value.trim();
+      const goal = Number(document.getElementById('camp-goal').value);
+      const raised = Number(document.getElementById('camp-raised').value);
+      const image = document.getElementById('camp-img').value.trim();
 
-      const campaigns = JSON.parse(localStorage.getItem('js_campaigns')) || [];
-      campaigns.unshift({ id: 'C' + (campaigns.length + 1), title, category, city, goal, raised: 0, image });
-      
-      localStorage.setItem('js_campaigns', JSON.stringify(campaigns));
-      alert('Campaign published successfully!');
+      const camps = JSON.parse(localStorage.getItem('js_campaigns')) || [];
+      const newCamp = {
+        id: 'C' + (camps.length + 1),
+        title, category, city, goal, raised, image
+      };
+
+      camps.unshift(newCamp);
+      localStorage.setItem('js_campaigns', JSON.stringify(camps));
+      alert("New campaign published successfully!");
       e.target.reset();
       loadAdminData();
     }
