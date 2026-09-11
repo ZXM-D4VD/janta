@@ -20,67 +20,66 @@
 </head>
 <body class="bg-slate-900 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- ADMIN AUTH LOCK OVERLAY -->
+  <!-- ADMIN LOCK SCREEN (PASSWORD STRICTLY 9090 - NO HINT DISPLAYED) -->
   <div id="admin-lock-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
       <div class="w-14 h-14 bg-saffron-500/10 text-saffron-600 rounded-2xl flex items-center justify-center text-2xl mx-auto font-black">
-        <i class="fa-solid fa-user-shield"></i>
+        <i class="fa-solid fa-lock"></i>
       </div>
       <div>
-        <h2 class="font-extrabold text-lg text-slate-900">Admin Control Console</h2>
+        <h2 class="font-extrabold text-lg text-slate-900">Admin Authentication</h2>
         <p class="text-xs text-slate-500 mt-1">Authorized Access Only</p>
       </div>
 
       <form onsubmit="unlockAdmin(event)" class="space-y-3">
-        <!-- New Admin Password Required: 9090 -->
-        <input type="password" id="admin-pass" required placeholder="Enter Secret Key (9090)" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-center text-sm font-bold tracking-widest focus:ring-2 focus:ring-saffron-500 outline-none">
-        <p id="pass-err" class="text-xs text-red-500 font-bold hidden">Invalid Password!</p>
-        <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-all">
-          Unlock Dashboard
+        <!-- Input field with NO password hints -->
+        <input type="password" id="admin-pass" required placeholder="Enter Secret Key" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-center text-sm font-bold tracking-widest focus:ring-2 focus:ring-saffron-500 outline-none">
+        <p id="pass-err" class="text-xs text-red-500 font-bold hidden">Access Denied! Incorrect Password.</p>
+        <button type="submit" class="w-full bg-saffron-500 hover:bg-saffron-600 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition">
+          Unlock Console
         </button>
       </form>
     </div>
   </div>
 
-  <!-- Desktop Top Navigation Bar -->
+  <!-- NAVBAR -->
   <header class="bg-slate-950 border-b border-slate-800 text-white px-6 py-3 flex items-center justify-between shrink-0">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-saffron-500 flex items-center justify-center font-black text-white text-base shadow">JS</div>
       <div>
         <h1 class="font-extrabold text-base tracking-tight flex items-center gap-2">
-          JanSeva Operations Dashboard
-          <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold">REALTIME CONNECTED</span>
+          Operations Dashboard
+          <span class="bg-emerald-600 text-white text-[9px] px-2 py-0.5 rounded-full font-bold">REALTIME LIVE</span>
         </h1>
         <p class="text-xs text-slate-400">Desktop Field Management Portal</p>
       </div>
     </div>
 
     <div class="flex items-center gap-3">
-      <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 font-bold">
-        <i class="fa-solid fa-mobile-screen"></i> Open App View
+      <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3.5 py-2 rounded-xl border border-slate-700 flex items-center gap-1.5 font-bold transition">
+        <i class="fa-solid fa-globe"></i> Return to Portal
       </a>
-      <button onclick="lockAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow">
+      <button onclick="lockAdmin()" class="bg-red-600 hover:bg-red-700 text-white text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1.5 shadow transition">
         <i class="fa-solid fa-lock"></i> Lock
       </button>
     </div>
   </header>
 
-  <!-- Desktop Dashboard Main Body -->
+  <!-- MAIN ADMIN DASHBOARD -->
   <main class="flex-1 p-6 space-y-6 max-w-7xl mx-auto w-full">
 
-    <!-- KPI Metric Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-black">₹</div>
         <div>
-          <span class="text-xs font-bold text-slate-400 block">Total Live Funds Raised</span>
+          <span class="text-xs font-bold text-slate-400 block">Total Live Funds</span>
           <span class="text-xl font-black text-slate-900" id="stat-funds">₹ 0</span>
         </div>
       </div>
       <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
         <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl font-black"><i class="fa-solid fa-clock"></i></div>
         <div>
-          <span class="text-xs font-bold text-slate-400 block">Pending User Tickets</span>
+          <span class="text-xs font-bold text-slate-400 block">Pending Tickets</span>
           <span class="text-xl font-black text-amber-600" id="stat-pending">0 Requests</span>
         </div>
       </div>
@@ -93,13 +92,13 @@
       </div>
     </div>
 
-    <!-- Live Requests Management Table -->
+    <!-- Incoming User Help Requests Table -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-2">
       <div class="bg-slate-50 px-5 py-3 border-b border-slate-200 flex justify-between items-center">
         <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
-          <i class="fa-solid fa-list-check text-saffron-500"></i> Incoming User Help Requests
+          <i class="fa-solid fa-envelope-open-text text-saffron-500"></i> Fetched User Help Requests
         </h3>
-        <span class="text-xs text-slate-500 font-semibold">Realtime Updates</span>
+        <span class="text-xs text-slate-500 font-semibold">Realtime Sync</span>
       </div>
 
       <div class="overflow-x-auto p-2">
@@ -110,13 +109,11 @@
               <th class="p-3">Applicant Name</th>
               <th class="p-3">Email & Contact</th>
               <th class="p-3">Category</th>
-              <th class="p-3">Concern Summary</th>
+              <th class="p-3">Concern Details</th>
               <th class="p-3">Status Action</th>
             </tr>
           </thead>
-          <tbody id="admin-table-body" class="divide-y divide-slate-100">
-            <!-- Dynamic Data Sync -->
-          </tbody>
+          <tbody id="admin-table-body" class="divide-y divide-slate-100"></tbody>
         </table>
       </div>
     </div>
@@ -124,7 +121,7 @@
   </main>
 
   <script>
-    const SECRET_PASS = "9090"; // Updated Admin Password
+    const SECRET_PASS = "9090";
 
     function unlockAdmin(e) {
       e.preventDefault();
@@ -155,7 +152,7 @@
       tbody.innerHTML = '';
 
       if(requests.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No requests submitted yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No user requests submitted yet.</td></tr>`;
         return;
       }
 
@@ -170,7 +167,7 @@
             <div class="text-[10px] text-slate-400">${r.city} • ${r.phone}</div>
           </td>
           <td class="p-3 font-semibold">${r.category}</td>
-          <td class="p-3 max-w-xs truncate">${r.concern}</td>
+          <td class="p-3 max-w-xs truncate" title="${r.concern}">${r.concern}</td>
           <td class="p-3">
             <select onchange="updateStatus(${idx}, this.value)" class="bg-slate-100 border border-slate-300 rounded-lg text-xs font-bold p-1">
               <option value="Pending" ${r.status === 'Pending' ? 'selected':''}>Pending</option>
